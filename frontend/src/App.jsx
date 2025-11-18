@@ -4,6 +4,8 @@ import StatsPanel from "./components/StatsPanel";
 import FilterBar from "./components/FilterBar";
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
+import Toaster, { notifySuccess, notifyError } from "./components/Toaster";
+
 import {
   fetchTodos,
   fetchStats,
@@ -11,8 +13,6 @@ import {
   updateTodo,
   deleteTodo
 } from "./api/todoApi";
-
-import Toaster, { notifySuccess, notifyError } from "./components/Toaster";
 
 let App = () => {
   let [todos, setTodos] = useState([]);
@@ -29,11 +29,10 @@ let App = () => {
         fetchTodos(filters),
         fetchStats()
       ]);
-
       setTodos(todosRes.data);
       setStats(statsRes.data);
     } catch (err) {
-      notifyError("Failed to load data.");
+      notifyError("Failed to load data");
     } finally {
       setLoading(false);
     }
@@ -61,73 +60,97 @@ let App = () => {
   let handleAddTodo = async (data) => {
     try {
       await createTodo(data);
-      notifySuccess("Task added successfully.");
+      notifySuccess("Task added");
       handleClearFilters();
     } catch (err) {
-      notifyError("Failed to add task.");
+      notifyError("Failed to add task");
     }
   };
 
   let handleToggleStatus = async (id, nextStatus) => {
     try {
       await updateTodo(id, { completed: nextStatus });
-      notifySuccess(
-        nextStatus ? "Task marked completed." : "Task marked pending."
-      );
+      notifySuccess(nextStatus ? "Marked as completed" : "Marked as pending");
       handleApplyFilters();
     } catch (err) {
-      notifyError("Failed to update task.");
+      notifyError("Failed to update task");
     }
   };
 
   let handleDelete = async (id) => {
     try {
       await deleteTodo(id);
-      notifySuccess("Task deleted.");
+      notifySuccess("Task deleted");
       handleApplyFilters();
     } catch (err) {
-      notifyError("Failed to delete task.");
+      notifyError("Failed to delete task");
     }
   };
 
   return (
-    <div className="app-root">
+    <div className="app-shell">
       <Header />
       <Toaster />
 
-      <main className="app-container">
-        {loading ? (
-          <p className="text-muted">Loading data...</p>
-        ) : (
-          <div className="dashboard-grid">
-            <div className="left-panel">
-              <StatsPanel stats={stats} />
-              <FilterBar
-                search={search}
-                setSearch={setSearch}
-                status={status}
-                setStatus={setStatus}
-                priority={priority}
-                setPriority={setPriority}
-                onApply={handleApplyFilters}
-                onClear={handleClearFilters}
-              />
-              <p className="text-muted" style={{ marginTop: 8 }}>
-                Showing {todos.length} task(s).
-              </p>
+      <main className="py-4">
+        <div className="main-wrapper">
+          {loading ? (
+            <div className="loading-shell d-flex flex-column align-items-center gap-2">
+              <div className="spinner-border spinner-border-sm text-info" />
+              <span className="small text-muted">Syncing your workspace</span>
             </div>
+          ) : (
+            <div className="row g-4">
+              {/* LEFT: OVERVIEW */}
+              <div className="col-lg-3 col-md-4">
+                {/* h-100 HATA DIYA */}
+                <div className="glass-card p-3">
+                  <StatsPanel stats={stats} />
+                </div>
+              </div>
 
-            <div className="right-panel">
-              <TodoForm onAdd={handleAddTodo} />
-              <div style={{ height: 14 }} />
-              <TodoList
-                todos={todos}
-                onToggle={handleToggleStatus}
-                onDelete={handleDelete}
-              />
+              {/* CENTER: NEW TASK + TASKS (middle column) */}
+              <div className="col-lg-6 col-md-8">
+                {/* New task form on top */}
+                <div className="glass-card p-3 mb-3">
+                  <TodoForm onAdd={handleAddTodo} />
+                </div>
+
+                {/* Tasks list below */}
+                <div className="glass-card p-0">
+                  <TodoList
+                    todos={todos}
+                    onToggle={handleToggleStatus}
+                    onDelete={handleDelete}
+                  />
+                </div>
+
+                <p className="mt-3 mb-0 footer-note text-center">
+                  Tip short tasks, clear priorities and realistic deadlines keep
+                  this board useful.
+                </p>
+              </div>
+
+              {/* RIGHT: FILTERS */}
+              <div className="col-lg-3">
+                {/* yahan bhi h-100 HATA DIYA */}
+                <div className="glass-card p-3">
+                  <FilterBar
+                    search={search}
+                    setSearch={setSearch}
+                    status={status}
+                    setStatus={setStatus}
+                    priority={priority}
+                    setPriority={setPriority}
+                    onApply={handleApplyFilters}
+                    onClear={handleClearFilters}
+                  />
+                  
+                </div>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </main>
     </div>
   );
