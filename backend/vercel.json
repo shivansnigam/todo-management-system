@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "app.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "app.js"
+    }
+  ],
+  "env": {
+    "PORT": "8080",
+    "MONGO_URI": "mongodb+srv://shivanshunigam18111999:5CTWxnuh5rqpiZmI@cluster0.zkkqjjp.mongodb.net/todo_db"
+  }
+}
