@@ -101,22 +101,20 @@ let App = () => {
             </div>
           ) : (
             <div className="row g-4">
+              
               {/* LEFT: OVERVIEW */}
               <div className="col-lg-3 col-md-4">
-                {/* h-100 HATA DIYA */}
                 <div className="glass-card p-3">
                   <StatsPanel stats={stats} />
                 </div>
               </div>
 
-              {/* CENTER: NEW TASK + TASKS (middle column) */}
+              {/* CENTER: NEW TASK + TASKS */}
               <div className="col-lg-6 col-md-8">
-                {/* New task form on top */}
                 <div className="glass-card p-3 mb-3">
                   <TodoForm onAdd={handleAddTodo} />
                 </div>
 
-                {/* Tasks list below */}
                 <div className="glass-card p-0">
                   <TodoList
                     todos={todos}
@@ -126,14 +124,12 @@ let App = () => {
                 </div>
 
                 <p className="mt-3 mb-0 footer-note text-center">
-                  Tip short tasks, clear priorities and realistic deadlines keep
-                  this board useful.
+                  Tip short tasks, clear priorities and realistic deadlines keep this board useful.
                 </p>
               </div>
 
-              {/* RIGHT: FILTERS */}
-              <div className="col-lg-3">
-                {/* yahan bhi h-100 HATA DIYA */}
+              {/* RIGHT: FILTERS (HIDE ONLY ON MOBILE) */}
+              <div className="col-lg-3 d-none d-md-block">
                 <div className="glass-card p-3">
                   <FilterBar
                     search={search}
@@ -145,9 +141,12 @@ let App = () => {
                     onApply={handleApplyFilters}
                     onClear={handleClearFilters}
                   />
-                  
+                  <small className="text-muted d-block mt-2">
+                    Showing {todos.length} task(s) with current filters
+                  </small>
                 </div>
               </div>
+
             </div>
           )}
         </div>

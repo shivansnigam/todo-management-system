@@ -5,7 +5,7 @@ let Header = () => {
         <div className="d-flex align-items-center gap-3">
           <div className="brand-pill">T</div>
           <div>
-            <h1 className="app-title mb-0">Todo Control Room</h1>
+            <h1 className="app-title mb-0">Todo Control </h1>
             <p className="app-subtitle mb-0">
               One place for tasks, focus and deadlines.
             </p>
